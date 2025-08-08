@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ghosted1.0 </title>
+<style>
+  :root{
+    --bg:#0b0b0b;
+    --card:#121212;
+    --accent:#e11d2b;
+    --muted:#bdbdbd;
+    --glass:rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 10% 10%, rgba(225,29,43,0.06), transparent 8%),
+      linear-gradient(180deg,#070707 0%, #0d0d0d 100%);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    color:#eee;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+  }
+
+  .app {
+    width:100%;
+    max-width:920px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+    overflow:hidden;
+    display:grid;
+    grid-template-columns: 360px 1fr;
+    gap:0;
+  }
+
+  .left {
+    background: linear-gradient(180deg,var(--card), rgba(17,17,17,0.9));
+    padding:20px;
+    border-right: 1px solid rgba(255,255,255,0.03);
+  }
+  .profile {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin-bottom:18px;
+  }
+  .avatar {
+    width:64px;height:64px;border-radius:12px;
+    background: linear-gradient(135deg,var(--accent), #ff6b6b);
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    font-size:22px;color:white;box-shadow: 0 6px 18px rgba(225,29,43,0.18);
+  }
+  h2{margin:0;font-size:18px}
+  p.sub{margin:4px 0 12px;color:var(--muted);font-size:13px}
+
+  .stats {
+    display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .stat {
+    background:var(--glass);
+    padding:10px;border-radius:10px;width:calc(50% - 6px);
+    font-size:13px;color:var(--muted);
+  }
+  .ghostmeter {
+    margin-top:18px;
+  }
+  .meter-track {
+    height:12px;background:#1a1a1a;border-radius:999px;overflow:hidden;
+  }
+  .meter-fill {
+    height:100%;background:linear-gradient(90deg,var(--accent),#ff5a5a);
+    width:0%;transition:width 700ms cubic-bezier(.2,.9,.2,1);
+  }
+  .meter-label{font-size:13px;margin-top:6px;color:var(--muted)}
+
+  .right {
+    padding:18px 18px 12px 18px;
+    display:flex;flex-direction:column;height:620px;
+  }
+  .header {
+    display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;
+  }
+  .header .title {font-weight:700}
+  .header .muted {color:var(--muted);font-size:13px}
+
+  .chat-window {
+    background: linear-gradient(0deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    border-radius:12px;padding:18px;flex:1;overflow:auto;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.6);
+  }
+
+  .message {
+    max-width:75%;
+    margin:8px 0;
+    padding:10px 12px;
+    border-radius:12px;
+    line-height:1.25;
+  }
+  .me{
+    background:linear-gradient(180deg, rgba(225,29,43,0.08), rgba(225,29,43,0.04));
+    align-self:flex-end;
+    color:#ffdfe0
+  }
+  .ex{
+    background:rgba(255,255,255,0.03);
+    align-self:flex-start;
+    color:#fff
+  }
+
+  .meta {font-size:11px;color:var(--muted);margin-top:6px}
+  .seen {font-size:12px;color:#ffb3b3;margin-left:8px}
+
+  .typing {
+    display:flex;gap:6px;align-items:center;margin:6px 0;height:34px;
+  }
+  .dots {
+    width:46px;height:22px;background:rgba(255,255,255,0.03);border-radius:12px;display:flex;align-items:center;justify-content:center;padding:4px 8px;
+  }
+  .dot {
+    width:8px;height:8px;border-radius:50%;background:var(--muted);opacity:0.4;margin:0 4px;
+    animation: blink 1s infinite;
+  }
+  .dot:nth-child(2){animation-delay:0.15s}
+  .dot:nth-child(3){animation-delay:0.3s}
+  @keyframes blink {0%{opacity:0.2}50%{opacity:1}100%{opacity:0.2}}
+
+  .composer {
+    margin-top:12px;display:flex;gap:10px;align-items:center;
+    transition:opacity .3s;
+  }
+  .composer input {
+    flex:1;padding:12px 14px;border-radius:999px;border:1px solid rgba(255,255,255,0.03);
+    background:transparent;color:inherit;font-size:15px;outline:none;
+  }
+  .btn {
+    background:var(--accent);border:none;padding:10px 16px;border-radius:12px;color:white;
+    cursor:pointer;font-weight:700;box-shadow: 0 8px 18px rgba(225,29,43,0.14);
+    transition:transform .14s ease;
+  }
+  .btn:active{transform:translateY(1px)}
+
+  .ghost-overlay {
+    position:absolute;inset:0;background:linear-gradient(180deg, rgba(11,11,11,0.95), rgba(10,10,10,0.98));
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    gap:14px;padding:28px;color:#fff;z-index:80;opacity:0;pointer-events:none;transition:opacity .6s ease;
+  }
+  .ghost-overlay.show{opacity:1;pointer-events:auto}
+  .ghost-card {
+    max-width:680px;background:rgba(0,0,0,0.4);padding:26px;border-radius:14px;text-align:center;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)
+  }
+  .ghost-card h1{margin:0 0 8px 0;font-size:36px}
+  .ghost-card p{margin:0;color:var(--muted)}
+  .fake-btn {margin-top:18px;padding:10px 18px;border-radius:12px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;cursor:pointer}
+
+  .small {font-size:12px;color:var(--muted)}
+  .footer-credit {text-align:center;padding:10px 0;color:var(--muted);font-size:12px}
+  @media (max-width:880px){
+    .app{grid-template-columns:1fr}
+    .left{display:none}
+  }
+</style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="left">
+      <div class="profile">
+        <div class="avatar">EX</div>
+        <div>
+          <h2>Ghosted1.0 — Your Ex</h2>
+          <p class="sub">They texted. Then they disappeared. Very theatrical.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat"><strong id="sentCount">0</strong><br><span class="small">Messages sent</span></div>
+        <div class="stat"><strong id="repliesCount">0</strong><br><span class="small">Replies received</span></div>
+        <div class="stat"><strong id="ghostLevel">0</strong><br><span class="small">Ghost Level</span></div>
+        <div class="stat"><strong id="lastSeen">—</strong><br><span class="small">Last seen</span></div>
+      </div>
+      <div class="ghostmeter" style="margin-top:14px">
+        <div class="meter-track">
+          <div class="meter-fill" id="meterFill"></div>
+        </div>
+        <div class="meter-label">Ghost Level: <span id="meterPct">0%</span></div>
+      </div>
+      <div style="margin-top:18px;color:var(--muted);font-size:13px">
+        Tip: keep texting to increase the drama. (Uselessness guaranteed)
+      </div>
+    </div>
+    <div class="right">
+      <div class="header">
+        <div>
+          <div class="title">Chat with — <span style="color:var(--accent)">Ex</span></div>
+          <div class="muted">A tiny, spiteful relationship simulator</div>
+        </div>
+        <div class="muted small">Built for chaos • No refunds</div>
+      </div>
+      <div class="chat-window" id="chatWindow">
+        <!-- messages go here -->
+        <div style="display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:13px;margin-bottom:6px">
+          <div>Start by typing something below — then watch them avoid you.</div>
+        </div>
+      </div>
+      <div class="composer">
+        <input id="userText" placeholder="Type a message that'll not get a reply..." onkeydown="if(event.key==='Enter') sendMessage()" autocomplete="off"/>
+        <button class="btn" onclick="sendMessage()">Send</button>
+      </div>
+      <div class="footer-credit">Made uselessly by you • Ghosted1.0</div>
+    </div>
+
+    <!-- Ghost overlay -->
+    <div class="ghost-overlay" id="ghostOverlay" aria-hidden="true">
+      <div class="ghost-card">
+        <h1>💔 You’ve been ghosted. Permanently.</h1>
+        <p id="ghostLine">They moved on quietly, without saying goodbye.</p>
+        <div style="margin-top:20px;">
+          <button class="fake-btn" onclick="moveOn()">Move On</button>
+          <button class="fake-btn" onclick="mistakeAgain()" style="margin-left:10px;">Mistake Again</button>
+        </div>
+        <div style="margin-top:12px;color:var(--muted)">The "Move On" button is decorative and unhelpful.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // --- Configuration & fake reply pool ---
+  const replies = [
+    "Haha, whatever.",
+    "Nope.",
+    "This convo is dead.",
+    "Nirthi po",
+    "Wow… you still text?",
+    "Don't text me again.",
+    "I like someone else now.",
+    "Lol.",
+    "K.",
+    "Bye.",
+    "You're sweet. For a notification.",
+    "Leave me alone.",
+    "Srsly? Stop.",
+    "Get a life.",
+  ];
+
+  // Edge responses — 'deleted' variations
+  const deletedVariants = [
+    "deleted the message.",
+    "unsent it. Wait, thought better.",
+    "deleted... now it's a rumor."
+  ];
+
+  // Realistic-ish timing (ms)
+  const minDelay = 800;
+  const maxDelay = 2200;
+
+  // State
+  let sent = 0;
+  let received = 0;
+  let ghostLevel = 0;
+
+  const chatWindow = document.getElementById('chatWindow');
+  const userText = document.getElementById('userText');
+  const meterFill = document.getElementById('meterFill');
+  const meterPct = document.getElementById('meterPct');
+
+  function appendMessage(text, who, metaText) {
+    const el = document.createElement('div');
+    el.className = 'message ' + (who === 'me' ? 'me' : 'ex');
+    el.innerHTML = `<div>${escapeHtml(text)}</div>` + (metaText ? `<div class="meta">${metaText}</div>` : '');
+    chatWindow.appendChild(el);
+    chatWindow.scrollTop = chatWindow.scrollHeight + 200;
+  }
+
+  function showTypingIndicator() {
+    const div = document.createElement('div');
+    div.className = 'typing';
+    div.id = 'typingIndicator';
+    div.innerHTML = `<div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="small" style="color:var(--muted)">Ex is typing...</div>`;
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight + 200;
+  }
+
+  function removeTypingIndicator() {
+    const t = document.getElementById('typingIndicator');
+    if (t) t.remove();
+  }
+
+  function randInt(min, max) { return Math.floor(Math.random()*(max-min+1))+min; }
+  function randChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function randomSeenTime() {
+    const now = new Date();
+    const hoursBack = randInt(0, 72);
+    const d = new Date(now - hoursBack*3600*1000 - randInt(0, 59)*60000);
+    let hh = d.getHours();
+    const ampm = hh >= 12 ? 'PM' : 'AM';
+    hh = hh % 12 || 12;
+    const mm = String(d.getMinutes()).padStart(2,'0');
+    return `Seen at ${hh}:${mm} ${ampm}`;
+  }
+
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#039;');
+  }
+
+  function sendMessage(){
+    const text = userText.value.trim();
+    if(!text) return;
+    appendMessage(text, 'me');
+    sent++;
+    document.getElementById('sentCount').innerText = sent;
+    increaseGhostLevel(1);
+    userText.value = '';
+    userText.focus();
+
+    const roll = Math.random();
+
+    if (roll < 0.18) {
+      const seen = randomSeenTime();
+      setTimeout(()=> {
+        appendMessage('—', 'ex', seen);
+        lastSeenUpdate(seen);
+      }, randInt(300,800));
+    } else {
+      showTypingIndicator();
+      const delay = randInt(minDelay, maxDelay);
+
+      setTimeout(()=> {
+        removeTypingIndicator();
+
+        if (Math.random() < 0.16) {
+          appendMessage('Typing… deleted the message.', 'ex', randomSeenTime());
+          lastSeenUpdate(randomSeenTime());
+          increaseGhostLevel(1);
+        } else {
+          let reply = randChoice(replies);
+
+          if (reply.includes('deleted') === false && Math.random() < 0.08) {
+            reply += ' — ' + randChoice(deletedVariants);
+          }
+
+          appendMessage(reply, 'ex', randomSeenTime());
+          received++;
+          document.getElementById('repliesCount').innerText = received;
+
+          if (reply.toLowerCase().includes('moved on') || reply.toLowerCase().includes('no longer')) {
+            increaseGhostLevel(2);
+          } else {
+            if (Math.random() < 0.12) {
+              increaseGhostLevel(-1);
+            } else {
+              increaseGhostLevel(1);
+            }
+          }
+        }
+        if (ghostLevel >= 100) {
+          triggerPermanentGhost();
+        }
+      }, delay);
+    }
+  }
+
+  function increaseGhostLevel(delta) {
+    ghostLevel = Math.max(0, Math.min(100, ghostLevel + delta*10));
+    document.getElementById('ghostLevel').innerText = Math.round(ghostLevel/10);
+    meterFill.style.width = ghostLevel + '%';
+    meterPct.innerText = ghostLevel + '%';
+    const fill = meterFill;
+    fill.animate([{transform:'scaleX(0.98)'},{transform:'scaleX(1)'}],{duration:350});
+  }
+
+  function lastSeenUpdate(text) {
+    document.getElementById('lastSeen').innerText = text;
+    const el = document.getElementById('lastSeen');
+    el.animate([{transform:'translateY(-3px)'},{transform:'translateY(0px)'}],{duration:420});
+  }
+
+  function triggerPermanentGhost() {
+    if (document.getElementById('ghostOverlay').classList.contains('show')) return;
+    showTypingIndicator();
+    setTimeout(()=>{
+      removeTypingIndicator();
+      appendMessage('They left a single message: "I am gone."', 'ex', randomSeenTime());
+      document.getElementById('ghostOverlay').classList.add('show');
+      chatWindow.scrollTop = chatWindow.scrollHeight + 400;
+    }, 1200 + randInt(200,800));
+  }
+
+  function moveOn(){
+    // Try to close browser tab/window, fallback to blank page
+    window.close();
+    window.location.href = "about:blank";
+  }
+
+  function mistakeAgain() {
+    sent = 0;
+    received = 0;
+    ghostLevel = 0;
+    document.getElementById('sentCount').innerText = sent;
+    document.getElementById('repliesCount').innerText = received;
+    document.getElementById('ghostLevel').innerText = "0";
+    meterFill.style.width = "0%";
+    meterPct.innerText = "0%";
+    document.getElementById('lastSeen').innerText = "—";
+
+    chatWindow.innerHTML = `
+      <div style="display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:13px;margin-bottom:6px">
+        <div>Start by typing something below — then watch them avoid you.</div>
+      </div>
+    `;
+    document.getElementById('ghostOverlay').classList.remove('show');
+    document.querySelector('.composer').style.opacity = '1';
+    document.querySelector('.composer').style.pointerEvents = 'auto';
+
+    setTimeout(() => {
+      appendMessage("…", 'ex', randomSeenTime());
+      setTimeout(() => {
+        const w = [
+          "Oh, it's you.",
+          "Don't message me here.",
+          "This chat is archived. Or maybe it's haunted."
+        ];
+        appendMessage(randChoice(w), 'ex', randomSeenTime());
+        received += 2;
+        document.getElementById('repliesCount').innerText = received;
+      }, 700);
+    }, 700);
+  }
+
+  (function seed(){
+    const w = [
+      "Oh, it's you.",
+      "Don't message me here.",
+      "This chat is archived. Or maybe it's haunted."
+    ];
+    setTimeout(()=> {
+      appendMessage("…", 'ex', randomSeenTime());
+      setTimeout(()=> appendMessage(randChoice(w), 'ex', randomSeenTime()), 700);
+      received += 2;
+      document.getElementById('repliesCount').innerText = received;
+    }, 700);
+  })();
+
+  window.onload = () => { userText.focus(); };
+
+  if (!String.prototype.replaceAll) {
+    String.prototype.replaceAll = function(search, replacement) {
+      return this.split(search).join(replacement);
+    };
+  }
+</script>
+</body>
+</html>
