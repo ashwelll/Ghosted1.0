@@ -43,53 +43,45 @@ For Software:
 [commands]
 
 ### Project Documentation
-For Software:
+For Software: Ghosted1.0 is a playful single-page web application simulating a mock relationship chat with an "Ex." The app is built with vanilla HTML, CSS, and JavaScript, and features a chat interface, "ghost level" progress bar, stats area, and dramatic overlays. Users can send messages, receive automated sarcastic replies, be "ghosted," and either "move on" (exit the site) or "here we go again" (reset the simulation).
+Modern UI: Clean, mobile-responsive design with left-side stats and a chatting interface.
+Chat Simulator: Sends messages and receives randomized "Ex" responses.
+Ghost Meter: Visual progress bar of "ghost risk."
+Ghosting Overlay: Dramatic end screen with "Move On" and "Here We Go Again" buttons.
+Persistent Stats: Tracks sent and received messages, ghost level, and last seen.
+Loop Functionality: User can reset for another run without refreshing the page.
+Exit Functionality: "Move On" attempts to close the browser tab, or redirects to a blank page.
 
 # Screenshots (Add at least 3)
-![Screenshot1](Add screenshot 1 here with proper name)
-*Add caption explaining what this shows*
+<img width="1308" height="758" alt="3" src="https://github.com/user-attachments/assets/2dde000a-2774-4c41-ac41-c1de9f5a0623" />
+When they ghost you so hard, even the app gives up on you.
 
-![Screenshot2](Add screenshot 2 here with proper name)
-*Add caption explaining what this shows*
+<img width="1478" height="812" alt="2" src="https://github.com/user-attachments/assets/7405437b-1933-4d56-8c7e-07bdd5505784" />
+Texting into the void — Ghost Level: Drama escalating!
 
-![Screenshot3](Add screenshot 3 here with proper name)
-*Add caption explaining what this shows*
+<img width="1566" height="847" alt="1" src="https://github.com/user-attachments/assets/b2d0dbed-3cfa-432f-bbe7-ec32b39307ae" />
+The beginning of the end — trying to keep the conversation alive, but no luck.
 
 # Diagrams
-![Workflow](Add your workflow/architecture diagram here)
-*Add caption explaining your workflow*
+None
 
 For Hardware:
 
 # Schematic & Circuit
-![Circuit](Add your circuit diagram here)
-*Add caption explaining connections*
-
-![Schematic](Add your schematic diagram here)
-*Add caption explaining the schematic*
+None
 
 # Build Photos
-![Components](Add photo of your components here)
-*List out all components shown*
-
-![Build](Add photos of build process here)
-*Explain the build steps*
-
-![Final](Add photo of final product here)
-*Explain the final build*
+None
 
 ### Project Demo
 # Video
-[Add your demo video link here]
-*Explain what the video demonstrates*
+
 
 # Additional Demos
-[Add any extra demo materials/links]
+None
 
 ## Team Contributions
-- [Name 1]: [Specific contributions]
-- [Name 2]: [Specific contributions]
-- [Name 3]: [Specific contributions]
+None
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
