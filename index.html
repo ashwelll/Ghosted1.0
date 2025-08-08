@@ -211,7 +211,7 @@
         <input id="userText" placeholder="Type a message that'll not get a reply..." onkeydown="if(event.key==='Enter') sendMessage()" autocomplete="off"/>
         <button class="btn" onclick="sendMessage()">Send</button>
       </div>
-      <div class="footer-credit">Made uselessly by you • Ghosted1.0</div>
+      <div class="footer-credit">Made uselessly by Guyinthediary • Ghosted1.0</div>
     </div>
 
     <!-- Ghost overlay -->
@@ -221,9 +221,9 @@
         <p id="ghostLine">They moved on quietly, without saying goodbye.</p>
         <div style="margin-top:20px;">
           <button class="fake-btn" onclick="moveOn()">Move On</button>
-          <button class="fake-btn" onclick="mistakeAgain()" style="margin-left:10px;">Mistake Again</button>
+          <button class="fake-btn" onclick="mistakeAgain()" style="margin-left:10px;">Here We Go Again</button>
         </div>
-        <div style="margin-top:12px;color:var(--muted)">The "Move On" button is decorative and unhelpful.</div>
+        <div style="margin-top:12px;color:var(--muted)">Move On? More like stay stuck.</div>
       </div>
     </div>
   </div>
@@ -231,6 +231,7 @@
 <script>
   // --- Configuration & fake reply pool ---
   const replies = [
+    "Same old you, huh?",
     "Haha, whatever.",
     "Nope.",
     "This convo is dead.",
@@ -241,17 +242,19 @@
     "Lol.",
     "K.",
     "Bye.",
-    "You're sweet. For a notification.",
+    "💔",
     "Leave me alone.",
     "Srsly? Stop.",
     "Get a life.",
+    "I’m not interested.",
+    "You done?"
   ];
 
   // Edge responses — 'deleted' variations
   const deletedVariants = [
-    "deleted the message.",
-    "unsent it. Wait, thought better.",
-    "deleted... now it's a rumor."
+    "Don't",
+    "Unsent it.",
+    "Stop."
   ];
 
   // Realistic-ish timing (ms)
