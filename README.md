@@ -35,12 +35,12 @@ For Hardware:
 - None
 
 ### Implementation
-For Software:
+None
 # Installation
-[commands]
+None
 
 # Run
-[commands]
+None
 
 ### Project Documentation
 For Software: Ghosted1.0 is a playful single-page web application simulating a mock relationship chat with an "Ex." The app is built with vanilla HTML, CSS, and JavaScript, and features a chat interface, "ghost level" progress bar, stats area, and dramatic overlays. Users can send messages, receive automated sarcastic replies, be "ghosted," and either "move on" (exit the site) or "here we go again" (reset the simulation).
@@ -65,7 +65,6 @@ The beginning of the end — trying to keep the conversation alive, but no luck.
 # Diagrams
 None
 
-For Hardware:
 
 # Schematic & Circuit
 None
@@ -75,7 +74,7 @@ None
 
 ### Project Demo
 # Video
-
+https://drive.google.com/drive/folders/1bHumXHQpfWOl97_W5kMnAubp5_g1OoVV?usp=sharing
 
 # Additional Demos
 None
